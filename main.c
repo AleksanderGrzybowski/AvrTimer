@@ -7,13 +7,18 @@
 #include <stdio.h>
 #include <avr/eeprom.h>
 
+#include "HD44780.h"
+
 int main() {
-	DDRC = 0xff;
+	LCD_Initalize();
+
+	char buf[10];
+	int i = 0;
 
 	while (1) {
-		PORTC = 0;
-		_delay_ms(1000);
-		PORTC = 1;
+		LCD_Clear();
+		sprintf(buf, "Hello %d", i++);
+		LCD_WriteText(buf);
 		_delay_ms(1000);
 	}
 }
