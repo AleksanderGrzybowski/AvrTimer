@@ -1,4 +1,3 @@
-#define F_CPU 9200000/8
 
 #include <avr/io.h>
 #include <util/delay.h>
