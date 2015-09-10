@@ -132,7 +132,12 @@ label_end:
 }
 
 void menu_set_span() {
-	// NYI
+	LCD_Clear();
+	debounce();
+
+	Time from = ask_for_time("Turn on from");
+	Time to = ask_for_time("Turn on until");
+
 }
 
 void menu_set_time() {
@@ -214,7 +219,7 @@ int main() {
 		}
 
 		Time now = get_time();
-		sprintf(buf, "Now %02d:%02d:%02d", now.hour, now.minute, now.second);
+		sprintf(buf, "Now %02d%c%02d", now.hour, (now.second % 2 == 0) ? ':' : ' ', now.minute);
 
 		LCD_WriteText(buf);
 		_delay_ms(100);
