@@ -61,14 +61,7 @@ int get_key() {
 	}
 }
 
-void menu_set_span() {
-	// NYI
-}
-
-void menu_set_time() {
-	LCD_Clear();
-	debounce();
-
+Time ask_for_time(char* message) {
 	char buf[17];
 
 	Time time = get_time();
@@ -76,6 +69,8 @@ void menu_set_time() {
 	while (true) {
 		sprintf(buf, "Hour: %d", time.hour);
 		LCD_Clear();
+		LCD_WriteText(message);
+		LCD_GoTo(0, 1);
 		LCD_WriteText(buf);
 
 		int key = get_key();
@@ -106,6 +101,8 @@ label_minutes:
 	while (true) {
 		sprintf(buf, "Minute: %d", time.minute);
 		LCD_Clear();
+		LCD_WriteText(message);
+		LCD_GoTo(0, 1);
 		LCD_WriteText(buf);
 
 		int key = get_key();
@@ -129,9 +126,22 @@ label_minutes:
 		}
 		_delay_ms(200);
 	}
-label_end:
 
-	set_time(time);
+label_end:
+	return time;
+}
+
+void menu_set_span() {
+	// NYI
+}
+
+void menu_set_time() {
+	LCD_Clear();
+	debounce();
+
+	Time now = ask_for_time("Current time");
+
+	set_time(now);
 	return;
 
 }
