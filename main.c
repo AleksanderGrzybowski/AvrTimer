@@ -41,18 +41,21 @@ Time get_time() {
 #define PRESSED_ANY    (PRESSED_LEFT || PRESSED_MIDDLE || PRESSED_RIGHT)
 
 void debounce() {
-	_delay_ms(200);
+	_delay_ms(100);
 }
 
 int get_key() {
 	while (true) {
 		if (PRESSED_LEFT) {
+			debounce();
 			return 0;
 		}
 		if (PRESSED_MIDDLE) {
+			debounce();
 			return 1;
 		}
 		if (PRESSED_RIGHT) {
+			debounce();
 			return 2;
 		}
 	}
@@ -63,7 +66,74 @@ void menu_set_span() {
 }
 
 void menu_set_time() {
-	// NYI
+	LCD_Clear();
+	debounce();
+
+	char buf[17];
+
+	Time time = get_time();
+
+	while (true) {
+		sprintf(buf, "Hour: %d", time.hour);
+		LCD_Clear();
+		LCD_WriteText(buf);
+
+		int key = get_key();
+		switch (key) {
+			case 0:
+				if (time.hour == 0) {
+					time.hour = 23;
+				} else {
+					time.hour--;
+				}
+				break;
+			case 2:
+				if (time.hour == 23) {
+					time.hour = 0;
+				} else {
+					time.hour++;
+				}
+				break;
+			case 1:
+				goto label_minutes; // yeah!
+
+		}
+		_delay_ms(200);
+	}
+
+label_minutes:
+
+	while (true) {
+		sprintf(buf, "Minute: %d", time.minute);
+		LCD_Clear();
+		LCD_WriteText(buf);
+
+		int key = get_key();
+		switch (key) {
+			case 0:
+				if (time.minute == 0) {
+					time.minute = 59;
+				} else {
+					time.minute--;
+				}
+				break;
+			case 2:
+				if (time.minute == 59) {
+					time.minute = 0;
+				} else {
+					time.minute++;
+				}
+				break;
+			case 1:
+				goto label_end;
+		}
+		_delay_ms(200);
+	}
+label_end:
+
+	set_time(time);
+	return;
+
 }
 
 int option = 0;
@@ -137,6 +207,6 @@ int main() {
 		sprintf(buf, "Now %02d:%02d:%02d", now.hour, now.minute, now.second);
 
 		LCD_WriteText(buf);
-		_delay_ms(500);
+		_delay_ms(100);
 	}
 }
