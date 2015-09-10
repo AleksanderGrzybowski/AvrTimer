@@ -13,17 +13,18 @@
 typedef struct {
 	uint8_t hour;
 	uint8_t minute;
-	uint8_t second;
 } Time;
 
+Time global_from, global_to;
+
 void set_time(Time time) {
-	ds1307_setdate(1, 1, 1, time.hour, time.minute, time.second);
+	ds1307_setdate(1, 1, 1, time.hour, time.minute, 0);
 }
 
 Time get_time() {
 	uint8_t dummy;
 	Time result;
-	ds1307_getdate(&dummy, &dummy, &dummy, &result.hour, &result.minute, &result.second);
+	ds1307_getdate(&dummy, &dummy, &dummy, &result.hour, &result.minute, &dummy);
 	return result;
 }
 
@@ -135,9 +136,37 @@ void menu_set_span() {
 	LCD_Clear();
 	debounce();
 
-	Time from = ask_for_time("Turn on from");
-	Time to = ask_for_time("Turn on until");
+	Time user_from = ask_for_time("Turn on from");
+	Time user_to = ask_for_time("Turn on until");
 
+	global_from = user_from;
+	global_to = user_to;
+
+	store_span();
+}
+
+void store_span() {
+	eeprom_write_byte(13, global_from.hour);
+	eeprom_write_byte(14, global_from.minute);
+	eeprom_write_byte(15, global_to.hour);
+	eeprom_write_byte(16, global_to.minute);
+}
+
+void read_or_clear_span() {
+	uint8_t from_hour = eeprom_read_byte(13);
+	uint8_t from_minute = eeprom_read_byte(14);
+	uint8_t to_hour = eeprom_read_byte(15);
+	uint8_t to_minute = eeprom_read_byte(16);
+
+	global_from.hour = from_hour;
+	global_from.minute = from_minute;
+	global_to.hour = to_hour;
+	global_to.minute = to_minute;
+
+	if (from_hour == 255) { // freshly flashed
+		global_from.hour = global_from.minute = global_to.hour = global_to.minute = 0;
+		store_span();
+	}
 }
 
 void menu_set_time() {
@@ -209,6 +238,9 @@ int main() {
 	BUTTON_DDR &= ~(1 << BUTTON_MIDDLE);
 	BUTTON_DDR &= ~(1 << BUTTON_RIGHT);
 
+	read_or_clear_span();
+
+
 	char buf[16];
 
 	while (1) {
@@ -219,9 +251,14 @@ int main() {
 		}
 
 		Time now = get_time();
-		sprintf(buf, "Now %02d%c%02d", now.hour, (now.second % 2 == 0) ? ':' : ' ', now.minute);
-
+		sprintf(buf, "Now %02d:%02d", now.hour, now.minute);
 		LCD_WriteText(buf);
+
+		LCD_GoTo(0, 1);
+
+		sprintf(buf, "%02d:%02d - %02d:%02d", global_from.hour, global_from.minute, global_to.hour, global_to.minute);
+		LCD_WriteText(buf);
+
 		_delay_ms(100);
 	}
 }
