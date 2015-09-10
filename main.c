@@ -104,6 +104,7 @@ int main() {
 
 	SWITCH_DDR |= (1 << SWITCH);
 	SWITCH_PORT &= ~(1 << SWITCH); // turn off at the beginning
+	_delay_ms(1000); // let caps charge
 
 	read_span();
 
