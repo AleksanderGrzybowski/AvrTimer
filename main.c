@@ -76,6 +76,18 @@ void menu() {
 	}
 }
 
+void handle_switch(Time now) {
+	int _from = from.hour * 60 + from.minute;
+	int _to = to.hour * 60 + to.minute;
+	int _now = now.hour * 60 + now.minute;
+
+	if (_now > _from && _now < _to) {
+		SWITCH_PORT |= (1 << SWITCH);
+	} else {
+		SWITCH_PORT &= ~(1 << SWITCH);
+	}
+}
+
 char buf1[LCD_WIDTH + 1];
 char buf2[LCD_WIDTH + 1];
 
@@ -90,6 +102,9 @@ int main() {
 	BUTTON_DDR &= ~(1 << BUTTON_MIDDLE);
 	BUTTON_DDR &= ~(1 << BUTTON_RIGHT);
 
+	SWITCH_DDR |= (1 << SWITCH);
+	SWITCH_PORT &= ~(1 << SWITCH); // turn off at the beginning
+
 	read_span();
 
 	while (1) {
@@ -103,6 +118,8 @@ int main() {
 		sprintf(buf1, "Now %02d:%02d", now.hour, now.minute);
 		sprintf(buf2, "%02d:%02d - %02d:%02d", from.hour, from.minute, to.hour, to.minute);
 		LCD_WriteTwoRows(buf1, buf2);
+
+		handle_switch(now);
 
 		_delay_ms(100);
 	}
