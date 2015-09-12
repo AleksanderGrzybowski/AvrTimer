@@ -28,10 +28,9 @@ void LCD_WriteTwoRows(char* first, char* second) {
 	LCD_WriteText(second);
 }
 
-Time ask_for_time(char* message) {
+Time ask_for_time(char* message, Time time) {
 	char buf[LCD_WIDTH + 1];
 
-	Time time = get_time();
 
 	while (true) {
 		sprintf(buf, "Hour: %d", time.hour);

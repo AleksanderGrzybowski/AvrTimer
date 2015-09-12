@@ -7,8 +7,8 @@ void menu_set_span() {
 	LCD_Clear();
 	debounce();
 
-	Time user_from = ask_for_time("From:");
-	Time user_to = ask_for_time("To:");
+	Time user_from = ask_for_time("From:", from);
+	Time user_to = ask_for_time("To:", to);
 	bool _onoff = ask_for_onoff();
 	from = user_from;
 	to = user_to;
@@ -21,7 +21,7 @@ void menu_set_time() {
 	LCD_Clear();
 	debounce();
 
-	Time now = ask_for_time("Current time");
+	Time now = ask_for_time("Current time", get_time());
 
 	set_time(now);
 	return;
