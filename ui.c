@@ -89,3 +89,28 @@ label_minutes:
 label_end:
 	return time;
 }
+
+bool ask_for_onoff() {
+	bool selected = false;
+	char first[] = "On or off?";
+	char second[17];
+
+	while (true) {
+        sprintf(second, selected ? ">ON  OFF" : " ON >OFF");
+
+		LCD_WriteTwoRows(first, second);
+		int key = get_key();
+
+		switch(key) {
+		case 0:
+			selected = true;
+			break;
+		case 2:
+			selected = false;
+			break;
+		case 1:
+			return selected;
+		}
+	}
+}
+

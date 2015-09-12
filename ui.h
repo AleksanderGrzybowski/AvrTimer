@@ -32,5 +32,5 @@ void debounce();
 int get_key();
 Time ask_for_time(char* message);
 void LCD_WriteTwoRows(char* first, char* second);
-
+bool ask_for_onoff();
 #endif

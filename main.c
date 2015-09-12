@@ -7,9 +7,9 @@ void menu_set_span() {
 	LCD_Clear();
 	debounce();
 
-	Time user_from = ask_for_time("Turn on from");
-	Time user_to = ask_for_time("Turn on until");
-
+	Time user_from = ask_for_time("From:");
+	Time user_to = ask_for_time("To:");
+	bool onoff = ask_for_onoff();
 	from = user_from;
 	to = user_to;
 
