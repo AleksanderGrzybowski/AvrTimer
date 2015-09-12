@@ -25,4 +25,10 @@ void read_span() {
 	to.hour = eeprom_read_byte((uint8_t*)15);
 	to.minute = eeprom_read_byte((uint8_t*)16);
 	onoff = eeprom_read_byte((uint8_t*)17);
+
+	// fix, after flashing everything is 0xff
+	if (from.hour == 0xff) {
+		from.hour = from.minute = to.hour = to.minute = onoff = 0;
+		store_span();
+	}
 }
