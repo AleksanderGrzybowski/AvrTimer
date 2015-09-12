@@ -79,10 +79,18 @@ void handle_switch(Time now) {
 	int _to = to.hour * 60 + to.minute;
 	int _now = now.hour * 60 + now.minute;
 
-	if (_now > _from && _now < _to) {
-		SWITCH_PORT |= (1 << SWITCH);
-	} else {
-		SWITCH_PORT &= ~(1 << SWITCH);
+	if (_now > _from && _now < _to) { // includes
+		if (onoff) {
+			SWITCH_PORT |= (1 << SWITCH);
+		} else {
+            SWITCH_PORT &= ~(1 << SWITCH);
+		}
+	} else { // excludes
+		if (!onoff) {
+			SWITCH_PORT |= (1 << SWITCH);
+		} else {
+            SWITCH_PORT &= ~(1 << SWITCH);
+		}
 	}
 }
 
