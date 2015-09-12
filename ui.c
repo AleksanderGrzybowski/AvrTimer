@@ -91,7 +91,7 @@ label_end:
 }
 
 bool ask_for_onoff() {
-	bool selected = false;
+	bool selected = onoff;
 	char first[] = "On or off?";
 	char second[17];
 

@@ -9,9 +9,10 @@ void menu_set_span() {
 
 	Time user_from = ask_for_time("From:");
 	Time user_to = ask_for_time("To:");
-	bool onoff = ask_for_onoff();
+	bool _onoff = ask_for_onoff();
 	from = user_from;
 	to = user_to;
+	onoff = _onoff;
 
 	store_span();
 }
@@ -121,7 +122,7 @@ int main() {
 			Time now = get_time();
 			sprintf(buf1, "Now %02d%c%02d      ", now.hour,
 					colon_blink_flag ? ':' : ' ', now.minute);
-			sprintf(buf2, "%02d:%02d - %02d:%02d", from.hour, from.minute,
+			sprintf(buf2, "%s%02d:%02d-%02d:%02d", onoff ? "ON  " : "OFF ", from.hour, from.minute,
 					to.hour, to.minute);
 			LCD_WriteTwoRows(buf1, buf2);
 			handle_switch(now);

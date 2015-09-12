@@ -16,6 +16,7 @@ void store_span() {
 	eeprom_write_byte((uint8_t*)14, from.minute);
 	eeprom_write_byte((uint8_t*)15, to.hour);
 	eeprom_write_byte((uint8_t*)16, to.minute);
+	eeprom_write_byte((uint8_t*)17, onoff);
 }
 
 void read_span() {
@@ -23,4 +24,5 @@ void read_span() {
 	from.minute = eeprom_read_byte((uint8_t*)14);
 	to.hour = eeprom_read_byte((uint8_t*)15);
 	to.minute = eeprom_read_byte((uint8_t*)16);
+	onoff = eeprom_read_byte((uint8_t*)17);
 }

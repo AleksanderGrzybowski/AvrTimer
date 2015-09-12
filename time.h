@@ -9,5 +9,6 @@ typedef struct {
 } Time;
 
 Time from, to; // global TODO can it be there?
+int onoff;
 
 #endif
