@@ -113,3 +113,10 @@ bool ask_for_onoff() {
 	}
 }
 
+void set_backlight(bool state) {
+	if (state) {
+		BACKLIGHT_PORT |= (1 << BACKLIGHT);
+	} else {
+		BACKLIGHT_PORT &= ~(1 << BACKLIGHT);
+	}
+}

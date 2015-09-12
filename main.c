@@ -111,15 +111,32 @@ int main() {
 
 	SWITCH_DDR |= (1 << SWITCH);
 	SWITCH_PORT &= ~(1 << SWITCH); // turn off at the beginning
+
+	BACKLIGHT_DDR |= (1 << BACKLIGHT);
+	set_backlight(true);
+
 	_delay_ms(1000); // let caps charge
 
 	read_span();
 
 	int update_lcd_cnt = 10;
+	int lcd_backlight_cnt = 0;
 	int colon_blink_flag = true;
+
 	while (1) {
+		if (lcd_backlight_cnt++ > 100) {
+			set_backlight(false);
+		} else {
+			set_backlight(true);
+		}
+
+		if (PRESSED_LEFT || PRESSED_RIGHT) {
+			lcd_backlight_cnt = 0;
+		}
 
 		if (PRESSED_MIDDLE) {
+			lcd_backlight_cnt = 0;
+			set_backlight(true);
 			menu();
 		}
 
