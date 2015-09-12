@@ -1,6 +1,4 @@
 
-
-
 #include "time.h"
 #include "ui.h"
 #include "hardware.h" // TODO fix this dep?
@@ -17,7 +15,6 @@ void menu_set_span() {
 
 	store_span();
 }
-
 
 void menu_set_time() {
 	LCD_Clear();
@@ -40,15 +37,15 @@ void menu() {
 		LCD_GoTo(0, 1);
 
 		switch (option) {
-			case 0:
-				LCD_WriteText("^");
-				break;
-			case 1:
-				LCD_WriteText("     ^");
-				break;
-			case 2:
-				LCD_WriteText("          ^");
-				break;
+		case 0:
+			LCD_WriteText("^");
+			break;
+		case 1:
+			LCD_WriteText("     ^");
+			break;
+		case 2:
+			LCD_WriteText("          ^");
+			break;
 		}
 
 		int key = get_key();
@@ -59,17 +56,17 @@ void menu() {
 			option++;
 		} else if (key == 1) {
 			switch (option) {
-				case 0:
-					menu_set_span();
-					break;
-				case 1:
-					menu_set_time();
-					break;
-				case 2:
-					debounce();
-					LCD_Clear();
-					option = 0;
-					return;
+			case 0:
+				menu_set_span();
+				break;
+			case 1:
+				menu_set_time();
+				break;
+			case 2:
+				debounce();
+				LCD_Clear();
+				option = 0;
+				return;
 			}
 		}
 
@@ -120,14 +117,16 @@ int main() {
 		if (update_lcd_cnt++ > 10) {
 			update_lcd_cnt = 0;
 			colon_blink_flag = !colon_blink_flag;
-            LCD_GoTo(0, 0); // LCD_Clear() was here before TODO can it work?
-            Time now = get_time();
-            sprintf(buf1, "Now %02d%c%02d      ", now.hour, colon_blink_flag ? ':' : ' ', now.minute);
-            sprintf(buf2, "%02d:%02d - %02d:%02d", from.hour, from.minute, to.hour, to.minute);
-            LCD_WriteTwoRows(buf1, buf2);
-            handle_switch(now);
+			LCD_GoTo(0, 0); // LCD_Clear() was here before TODO can it work?
+			Time now = get_time();
+			sprintf(buf1, "Now %02d%c%02d      ", now.hour,
+					colon_blink_flag ? ':' : ' ', now.minute);
+			sprintf(buf2, "%02d:%02d - %02d:%02d", from.hour, from.minute,
+					to.hour, to.minute);
+			LCD_WriteTwoRows(buf1, buf2);
+			handle_switch(now);
 		}
 
-        _delay_ms(100);
+		_delay_ms(100);
 	}
 }
