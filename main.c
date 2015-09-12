@@ -93,6 +93,7 @@ char buf2[LCD_WIDTH + 1];
 
 int main() {
 	LCD_Initalize();
+	LCD_WriteText("Wait...");
 
 	BUTTON_PORT |= (1 << BUTTON_LEFT);
 	BUTTON_PORT |= (1 << BUTTON_MIDDLE);
@@ -108,20 +109,25 @@ int main() {
 
 	read_span();
 
+	int update_lcd_cnt = 10;
+	int colon_blink_flag = true;
 	while (1) {
-		LCD_Clear();
 
 		if (PRESSED_MIDDLE) {
 			menu();
 		}
 
-		Time now = get_time();
-		sprintf(buf1, "Now %02d:%02d", now.hour, now.minute);
-		sprintf(buf2, "%02d:%02d - %02d:%02d", from.hour, from.minute, to.hour, to.minute);
-		LCD_WriteTwoRows(buf1, buf2);
+		if (update_lcd_cnt++ > 10) {
+			update_lcd_cnt = 0;
+			colon_blink_flag = !colon_blink_flag;
+            LCD_GoTo(0, 0); // LCD_Clear() was here before TODO can it work?
+            Time now = get_time();
+            sprintf(buf1, "Now %02d%c%02d      ", now.hour, colon_blink_flag ? ':' : ' ', now.minute);
+            sprintf(buf2, "%02d:%02d - %02d:%02d", from.hour, from.minute, to.hour, to.minute);
+            LCD_WriteTwoRows(buf1, buf2);
+            handle_switch(now);
+		}
 
-		handle_switch(now);
-
-		_delay_ms(100);
+        _delay_ms(100);
 	}
 }
